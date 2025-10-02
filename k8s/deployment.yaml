@@ -1,0 +1,49 @@
+#deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vllm-deployment
+  namespace: vllm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vllm
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: vllm
+    spec:
+      tolerations:
+        - key: "sku"
+          operator: "Equal"
+          value: "gpu"
+          effect: "NoSchedule"
+      nodeSelector:
+        kubernetes.azure.com/accelerator: nvidia
+      containers:
+        - name: vllm
+          image: vllm/vllm-openai:latest
+          args:
+            - "--model=meta-llama/Llama-3.1-8B-Instruct"
+            - "--dtype=float16"
+          ports:
+            - containerPort: 8000
+          resources:
+            limits:
+              nvidia.com/gpu: 1
+              cpu: "4"
+              memory: "16Gi"
+            requests:
+              nvidia.com/gpu: 1
+              cpu: "2"
+              memory: "8Gi"
+          env:
+            - name: HF_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: hf-secret
+                  key: HF_TOKEN
+      restartPolicy: Always
