@@ -1,6 +1,6 @@
 # 🚀 LLM Serving on AKS with vLLM & GPU Monitoring
 
-This project demonstrates how to serve **open-weight LLMs (Llama-3.1-8B)** on **Azure Kubernetes Service (AKS)** with **GPU acceleration**, provisioned by **Terraform**, monitored in real time with **Prometheus + Grafana + NVIDIA DCGM Exporter**, and benchmarked under load with `hey`.
+This project demonstrates how to serve **open-weight LLMs (Llama-3.1-8B)** on **Azure Kubernetes Service (AKS)** with **GPU acceleration**, provisioned by **Terraform**, monitored in real time with **Prometheus + Grafana + NVIDIA DCGM Exporter**, and benchmarked under load with \`hey\`.
 
 ---
 
