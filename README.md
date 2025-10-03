@@ -1,6 +1,6 @@
 # 🚀 LLM Serving on AKS with vLLM & GPU Monitoring
 
-This project demonstrates how to serve **open-weight LLMs (Llama-3.1-8B)** on **Azure Kubernetes Service (AKS)** with **GPU acceleration**, provisioned by **Terraform**, monitored in real time with **Prometheus + Grafana + NVIDIA DCGM Exporter**, and benchmarked under load with \`hey\`.
+This project demonstrates how to serve **open-weight LLMs (Llama-3.1-8B)** on **Azure Kubernetes Service (AKS)** with **GPU acceleration**, provisioned by **Terraform**, monitored in real time with **Prometheus + Grafana + NVIDIA DCGM Exporter**, and benchmarked under load with `hey`.
 
 ---
 
@@ -8,7 +8,7 @@ This project demonstrates how to serve **open-weight LLMs (Llama-3.1-8B)** on **
 
 GPU temperature, utilization, memory usage, and power draw respond under load from `hey` load tests:
 
-![LLM GPU demo](docs/img/demo.gif)
+![LLM GPU demo](docs/img/aks-llm.gif)
 
 ## 🚀 Features
 
@@ -18,7 +18,7 @@ GPU temperature, utilization, memory usage, and power draw respond under load fr
 - **Prometheus & Grafana** — metrics + dashboards for system and GPU observability
 - **NVIDIA DCGM Exporter** — collects GPU temperature, memory, power, and utilization
 - **Load Testing** — with [`hey`](https://github.com/rakyll/hey) to measure latency, throughput, and GPU behavior under stress
-- **Cost Efficiency** — Infracost integration to calculate \$/request and \$/1k tokens
+- - **Cost Efficiency Analysis** — Infracost integrated with Terraform to estimate Azure spend and calculate $/request
 
 ---
 
@@ -130,31 +130,29 @@ http://$EXTERNAL_IP/v1/completions
 
 ## 💸 Cost Efficiency & Infracost
 
-### Running large LLMs on GPUs can be expensive. To track cost efficiency:
+### Using [Infracost](https://www.infracost.io/) I estimated the cost of running this deployment:
 
-### **GPU Costs** - Using Infracost, estimate the hourly cost of GPU node pools:
+![Infracost analysis](docs/img/infracost.png)
 
-```bash
-infracost breakdown --path=infra
-```
+- **Monthly cost (24/7 A100 GPU + AKS control plane):** ~$2,861
+- **Hourly burn rate:** ~$3/hr
 
-### Example:
+Benchmark with `hey` load testing (`1000 requests, concurrency=10`):
 
-- Standard_ND A100 v4 (1 GPU): ~$3.40/hr
-- 24 cores + 220GB RAM included in node
+- Avg latency: ~0.25s  
+- Throughput: ~39 requests/sec  
 
-### **Throughput vs Cost** - From load testing (hey):
+- **Effective cost per request:** ~$0.000021  
+- **Effective cost per 1k requests:** ~$0.021  
 
-- Throughput: ~40 req/sec at p95 250ms
-- Cost Efficiency:
+This provides a concrete baseline for evaluating **$ per token / request** when comparing vLLM vs other inference stacks like Triton.
 
-```bash
-$3.40 / hr ÷ (40 req/sec * 3600 sec/hr) ≈ $0.000023 / request
-```
+### **CI/CD**
 
-### **Future Work**
+- Infracost is integrated into the CI/CD to track cost impact upon each PR
 
-- Automate Infracost in CI/CD to track $/tokens across cluster configs
+### **Future Opportunity**
+- In a corporate setting we could use Infracost to implement FinOps, Tagging policies and Cost guardrails to ensure no surprise resources/costs
 - Compare vLLM vs Triton for efficiency trade-offs
 
 ---
