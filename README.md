@@ -18,7 +18,7 @@ GPU temperature, utilization, memory usage, and power draw respond under load fr
 - **Prometheus & Grafana** — metrics + dashboards for system and GPU observability
 - **NVIDIA DCGM Exporter** — collects GPU temperature, memory, power, and utilization
 - **Load Testing** — with [`hey`](https://github.com/rakyll/hey) to measure latency, throughput, and GPU behavior under stress
-- - **Cost Efficiency Analysis** — Infracost integrated with Terraform to estimate Azure spend and calculate $/request
+- **Cost Efficiency Analysis** — Infracost integrated with Terraform to estimate Azure spend and calculate $/request
 
 ---
 
@@ -28,7 +28,7 @@ GPU temperature, utilization, memory usage, and power draw respond under load fr
 - `terraform` installed
 - `kubectl` + `helm` configured for your cluster
 - `hey` for benchmarking
-- [Infracost](https://www.infracost.io/docs/) (optional, for cost analysis)
+- `infracost` (optional) for cost analysis
 
 ---
 
@@ -105,7 +105,7 @@ kubectl apply -f k8s/monitoring/dcgm-exporter.yaml
 
 ```bash
 hey -n 10000 -c 50 -m POST -H "Content-Type: application/json" \
--d '{"model": "meta-llama/Llama-3.1-8B-Instruct", "prompt": "Tell me a story about a robot who goes to the olympics"}' \
+-d '{"model": "meta-llama/Llama-3.1-8B-Instruct", "prompt": "Tell me a story about a cat named - Donut"}' \
 http://$EXTERNAL_IP/v1/completions
 ```
 
@@ -139,9 +139,8 @@ http://$EXTERNAL_IP/v1/completions
 
 Benchmark with `hey` load testing (`1000 requests, concurrency=10`):
 
-- Avg latency: ~0.25s
-- Throughput: ~39 requests/sec
-
+- **Avg latency:** ~0.25s
+- **Throughput:** ~39 requests/sec
 - **Effective cost per request:** ~$0.000021
 - **Effective cost per 1k requests:** ~$0.021
 
