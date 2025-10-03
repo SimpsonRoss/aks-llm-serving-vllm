@@ -8,7 +8,7 @@ This project demonstrates how to serve **open-weight LLMs (Llama-3.1-8B)** on **
 
 GPU temperature, utilization, memory usage, and power draw respond under load from `hey` load tests:
 
-![LLM GPU demo](docs/img/aks-llm.gif)
+![LLM GPU demo](docs/img/aks-llm-vllm.gif)
 
 ## 🚀 Features
 
@@ -139,11 +139,11 @@ http://$EXTERNAL_IP/v1/completions
 
 Benchmark with `hey` load testing (`1000 requests, concurrency=10`):
 
-- Avg latency: ~0.25s  
-- Throughput: ~39 requests/sec  
+- Avg latency: ~0.25s
+- Throughput: ~39 requests/sec
 
-- **Effective cost per request:** ~$0.000021  
-- **Effective cost per 1k requests:** ~$0.021  
+- **Effective cost per request:** ~$0.000021
+- **Effective cost per 1k requests:** ~$0.021
 
 This provides a concrete baseline for evaluating **$ per token / request** when comparing vLLM vs other inference stacks like Triton.
 
@@ -152,6 +152,7 @@ This provides a concrete baseline for evaluating **$ per token / request** when 
 - Infracost is integrated into the CI/CD to track cost impact upon each PR
 
 ### **Future Opportunity**
+
 - In a corporate setting we could use Infracost to implement FinOps, Tagging policies and Cost guardrails to ensure no surprise resources/costs
 - Compare vLLM vs Triton for efficiency trade-offs
 
